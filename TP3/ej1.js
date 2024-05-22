@@ -9,7 +9,7 @@ function randomWithDistribution(minValue, maxValue, exponent) {
     return Math.round(distributed_number);
 }
 
-// Lista para almacenar los valores generados aleatoriamente
+// Lista para almacenar los valores generados aleatoriamente.
 const randomValues = [];
 
 // Generar y almacenar 100 números aleatorios entre 1 y 100 siguiendo una distribución uniforme
