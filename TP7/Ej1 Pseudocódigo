@@ -1,0 +1,91 @@
+// Definir parámetros de la simulación
+experimentos = 60
+corridas_por_experimento = 100
+tiempo_entre_camiones = 15 // minutos
+num_camiones = experimentos * corridas_por_experimento
+resultados_experimentos = []
+
+// Función para convertir minutos a formato de minutos y segundos
+Función MinutosASegundos(minutos):
+    segundos = minutos * 60
+    Devolver segundos
+
+// Función para simular el tiempo de atención de cada empleado
+Función SimularTiempoAtencion(empleado):
+    Si empleado == 1:
+        // Simulación de tiempo de atención normal
+        tiempo_atencion = GenerarTiempoNormal(18, 4)
+    Si empleado == 2:
+        // Simulación de tiempo de atención exponencial
+        tiempo_atencion = GenerarTiempoExponencial(15)
+    Si empleado == 3:
+        // Simulación de tiempo de atención exponencial
+        tiempo_atencion = GenerarTiempoExponencial(16)
+    Si empleado == 4:
+        // Simulación de tiempo de atención normal
+        tiempo_atencion = GenerarTiempoNormal(14, 3)
+    Devolver tiempo_atencion
+
+// Función para simular una corrida
+Función SimularCorrida():
+    tiempo_espera_camiones = []
+
+    Para cada camion en 1 hasta num_camiones:
+        tiempo_espera_camion = 0
+        
+        Para cada empleado en 1 hasta 4:
+            tiempo_atencion = SimularTiempoAtencion(empleado)
+            tiempo_espera_camion += tiempo_atencion
+        
+        tiempo_espera_camiones.agregar(tiempo_espera_camion)
+    
+    tiempo_promedio_espera = Promedio(tiempo_espera_camiones)
+    Devolver tiempo_promedio_espera
+
+// Realizar simulación
+Para cada experimento en 1 hasta experimentos:
+    tiempos_promedio_corridas = []
+
+    Para cada corrida en 1 hasta corridas_por_experimento:
+        tiempo_promedio_corrida = SimularCorrida()
+        tiempos_promedio_corridas.agregar(tiempo_promedio_corrida)
+    
+    resultados_experimentos.agregar(Promedio(tiempos_promedio_corridas))
+
+// Calcular el tiempo promedio de espera de los camiones
+tiempo_promedio_espera_camiones = Promedio(resultados_experimentos)
+
+// Calcular intervalo de confianza del 95% para los resultados de los experimentos
+intervalo_confianza = CalcularIntervaloConfianza(resultados_experimentos)
+
+// Generar histograma de los tiempos promedio de espera de los camiones
+
+// Inicializar una lista para almacenar el tiempo de ocupación de cada surtidor
+tiempo_ocupacion_surtidores = []
+
+// Para cada experimento:
+Para cada experimento en resultados_experimentos:
+    tiempo_ocupacion_experimento = []
+    // Para cada corrida en el experimento:
+    Para cada corrida en experimento:
+        // Para cada empleado en la estación de servicio:
+        Para cada empleado en 1 hasta 4:
+            tiempo_atencion = SimularTiempoAtencion(empleado)
+            tiempo_ocupacion_experimento[empleado] += tiempo_atencion
+    
+    tiempo_total_experimento = Suma(tiempo_ocupacion_experimento)
+    
+    // Calcular el porcentaje de tiempo de ocupación de cada surtidor respecto al tiempo total de simulación
+    porcentaje_ocupacion_surtidor = []
+    Para cada tiempo_empleado en tiempo_ocupacion_experimento:
+        porcentaje_ocupacion_surtidor[empleado] = (tiempo_empleado / tiempo_total_experimento) * 100
+    
+    tiempo_ocupacion_surtidores.agregar(porcentaje_ocupacion_surtidor)
+
+// Imprimir resultados
+Imprimir "Tiempo promedio de espera de los camiones:", tiempo_promedio_espera_camiones
+Imprimir "Intervalo de confianza del 95%:", intervalo_confianza
+Imprimir "Porcentaje de tiempo de ocupación de cada surtidor:"
+Para cada porcentaje_ocupacion en tiempo_ocupacion_surtidores:
+    Imprimir porcentaje_ocupacion
+
