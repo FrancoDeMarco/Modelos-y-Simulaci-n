@@ -6,7 +6,7 @@ num_experimentos = 60
 num_corridas = 100
 tiempo_entre_camiones = 15  # minutos
 num_camiones = 4
-num_empleados = 5  # Ahora tenemos 5 empleados
+num_empleados = 10  # Ahora tenemos 10 empleados
 
 # Función para convertir minutos a formato de minutos y segundos
 def minutos_a_minutos_segundos(minutos):
@@ -26,6 +26,8 @@ def tiempo_atencion_empleado(empleado):
         return np.random.normal(14, 3)
     elif empleado == 5:
         return np.random.normal(19, 5)
+    else:
+        return np.random.normal(17, 4)  # Valor por defecto para empleados 6-10
 
 # Función para simular una corrida
 def simular_corrida():
@@ -33,7 +35,7 @@ def simular_corrida():
     tiempo_llegada_camion = 0
     for _ in range(num_camiones):
         tiempo_llegada_camion += np.random.exponential(tiempo_entre_camiones)
-        tiempos_atencion = [tiempo_atencion_empleado(np.random.randint(1, 6)) for _ in range(4)]
+        tiempos_atencion = [tiempo_atencion_empleado(np.random.randint(1, num_empleados + 1)) for _ in range(4)]
         tiempo_espera = max(0, max(tiempos_atencion) - (tiempo_llegada_camion - tiempo_entre_camiones))
         tiempos_espera.append(tiempo_espera)
     return np.mean(tiempos_espera)
@@ -61,10 +63,10 @@ plt.show()
 
 # Cálculo del porcentaje de tiempo de ocupación de cada surtidor
 tiempo_total_simulacion = num_experimentos * num_corridas * tiempo_entre_camiones
-tiempo_ocupacion_empleado = [0] * 5
+tiempo_ocupacion_empleado = [0] * num_empleados
 for _ in range(num_experimentos):
     for _ in range(num_corridas):
-        for empleado in range(1, 6):
+        for empleado in range(1, num_empleados + 1):
             tiempo_ocupacion_empleado[empleado-1] += min(tiempo_atencion_empleado(empleado), tiempo_entre_camiones)
 porcentaje_ocupacion = [tiempo / tiempo_total_simulacion * 100 for tiempo in tiempo_ocupacion_empleado]
 
