@@ -1,0 +1,41 @@
+INICIALIZAR parámetros:
+    capacidad_produccion = 130
+    media_demanda = 150
+    desvio_demanda = 25
+    costo_mantenimiento = 70
+    dias_habiles = 250
+    anos_simulacion = 30
+    dias_totales = dias_habiles * anos_simulacion
+    inventario_inicial = 90
+    niveles_minimos_inventario = [50, 60, 70, 80]
+
+DEFINIR función simular_produccion(nivel_minimo_inventario):
+    INICIALIZAR inventario a inventario_inicial
+    INICIALIZAR turnos_adicionales a 0
+    INICIALIZAR costos_mantenimiento a 0
+    
+    PARA cada día en dias_totales HACER:
+        GENERAR demanda aleatoria basada en media_demanda y desvio_demanda
+        ASEGURAR que demanda no sea negativa
+        RESTAR demanda de inventario
+        SI inventario < nivel_minimo_inventario ENTONCES:
+            SUMAR capacidad_produccion a inventario
+            INCREMENTAR turnos_adicionales
+        FIN SI
+        AGREGAR costo de mantenimiento basado en inventario actual
+        SUMAR capacidad_produccion a inventario (producción regular)
+    
+    CALCULAR turnos_adicionales_promedio como turnos_adicionales / anos_simulacion
+    CALCULAR costo_mantenimiento_promedio como costos_mantenimiento / anos_simulacion
+    
+    RETORNAR turnos_adicionales_promedio redondeado y costo_mantenimiento_promedio
+
+PARA cada nivel_minimo en niveles_minimos_inventario HACER:
+    OBTENER turnos_promedio y costo_promedio llamando a simular_produccion(nivel_minimo)
+    ALMACENAR turnos_promedio y costo_promedio en resultados[nivel_minimo]
+
+MOSTRAR resultados:
+    PARA cada nivel_minimo y su resultado en resultados HACER:
+        IMPRIMIR nivel_minimo de inventario
+        IMPRIMIR turnos adicionales promedio por año
+        IMPRIMIR costo de mantenimiento promedio anual
