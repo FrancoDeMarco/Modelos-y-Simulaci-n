@@ -12,6 +12,8 @@ total_minutes_per_day = hours_per_day * minutes_per_hour
 mean_service_time_cashier1 = 15
 std_dev_service_time_cashier1 = 3
 mean_service_time_cashier2 = 12
+mean_service_time_cashier3 = 14
+std_dev_service_time_cashier3 = 6
 
 # Tiempo de llegada de clientes
 mean_arrival_time = 10
@@ -20,15 +22,18 @@ mean_arrival_time = 10
 wait_times = []
 cashier1_busy_time = []
 cashier2_busy_time = []
+cashier3_busy_time = []
 
 for day in range(num_days):
     current_time = 0
     queue = []
     cashier1_end_time = 0
     cashier2_end_time = 0
+    cashier3_end_time = 0
     day_wait_times = []
     cashier1_busy = 0
     cashier2_busy = 0
+    cashier3_busy = 0
 
     while current_time < total_minutes_per_day:
         # Generar el tiempo de llegada del próximo cliente
@@ -49,16 +54,26 @@ for day in range(num_days):
                 arrival = queue.pop(0)
                 day_wait_times.append(cashier1_end_time - arrival)
 
-            if queue and current_time >= cashier2_end_time:
+            elif queue and current_time >= cashier2_end_time:
                 service_time = np.random.exponential(mean_service_time_cashier2)
                 cashier2_busy += service_time
                 cashier2_end_time = current_time + service_time
                 arrival = queue.pop(0)
                 day_wait_times.append(cashier2_end_time - arrival)
+            
+            elif queue and current_time >= cashier3_end_time:
+                service_time = np.random.normal(mean_service_time_cashier3, std_dev_service_time_cashier3)
+                if service_time < 0:
+                    service_time = 0
+                cashier3_busy += service_time
+                cashier3_end_time = current_time + service_time
+                arrival = queue.pop(0)
+                day_wait_times.append(cashier3_end_time - arrival)
     
     wait_times.append(np.mean(day_wait_times))
     cashier1_busy_time.append(cashier1_busy / total_minutes_per_day)
     cashier2_busy_time.append(cashier2_busy / total_minutes_per_day)
+    cashier3_busy_time.append(cashier3_busy / total_minutes_per_day)
 
 # Cálculo del intervalo de confianza para el tiempo de espera promedio
 confidence_level = 0.95
@@ -73,8 +88,10 @@ print(f"Intervalo de confianza al 95% para el tiempo de espera promedio: ({int(c
 # Porcentaje de tiempo de ocupación de cada caja
 mean_cashier1_busy = np.mean(cashier1_busy_time)
 mean_cashier2_busy = np.mean(cashier2_busy_time)
+mean_cashier3_busy = np.mean(cashier3_busy_time)
 print(f"Porcentaje de tiempo de ocupación de la caja 1: {mean_cashier1_busy*100:.2f}%")
 print(f"Porcentaje de tiempo de ocupación de la caja 2: {mean_cashier2_busy*100:.2f}%")
+print(f"Porcentaje de tiempo de ocupación de la caja 3: {mean_cashier3_busy*100:.2f}%")
 
 # Histograma de los tiempos de espera promedio por día
 plt.hist(wait_times, bins=30, edgecolor='k', alpha=0.7)
