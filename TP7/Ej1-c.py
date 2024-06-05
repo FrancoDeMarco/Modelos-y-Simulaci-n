@@ -6,7 +6,7 @@ num_experimentos = 60
 num_corridas = 100
 tiempo_entre_camiones = 15  # minutos
 num_camiones = 4
-num_empleados = 10  # Ahora tenemos 10 empleados
+num_empleados = 21  # Ahora tenemos 21 empleados
 
 # Función para convertir minutos a formato de minutos y segundos
 def minutos_a_minutos_segundos(minutos):
@@ -27,7 +27,7 @@ def tiempo_atencion_empleado(empleado):
     elif empleado == 5:
         return np.random.normal(19, 5)
     else:
-        return np.random.normal(17, 4)  # Valor por defecto para empleados 6-10
+        return np.random.normal(14, 3)  # Valor por defecto para empleados 6-10
 
 # Función para simular una corrida
 def simular_corrida():
